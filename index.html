@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>梦角·灵魂契合度测评</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        /* --- 1. 全局样式 --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: #fdf5e6;
+            color: #333;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 15px;
+        }
+
+        /* --- 2. 主容器 --- */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.1);
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        /* --- 3. 字体与组件 --- */
+        h1 { text-align: center; color: #d4af37; font-size: 24px; margin: 10px 0 20px; }
+        h2 { text-align: center; color: #d4af37; font-size: 20px; margin-bottom: 25px; }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #f0f0f0;
+            background: #fcfcfc;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            appearance: none;
+            transition: border 0.2s;
+        }
+        input:focus { border-color: #d4af37; background: #fff; }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #d4af37 0%, #c5a028 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.7; transform: none; }
+
+        /* --- 4. 选项卡片 --- */
+        .option {
+            padding: 18px 15px;
+            border: 1px solid #f5f5f5;
+            background: #fff;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .option:active { background: #fffdf0; border-color: #d4af37; transform: scale(0.99); }
+        .progress { text-align: right; color: #ccc; font-size: 13px; margin-bottom: 15px; }
+
+        /* --- 5. 结果页 --- */
+        #result-card {
+            padding: 30px 20px;
+            border: 4px double #d4af37; /* 双线边框更高级 */
+            border-radius: 16px;
+            text-align: center;
+            background: #fffcf5;
+            position: relative;
+        }
+        .score-box { font-size: 60px; font-weight: 800; color: #d4af37; margin: 15px 0; }
+        .type-tag { 
+            display: inline-block; padding: 6px 18px; 
+            background: #d4af37; border-radius: 50px; 
+            font-size: 15px; font-weight: bold; color: #fff;
+            margin-bottom: 20px; 
+        }
+        .result-content { background: rgba(255,255,255,0.8); padding: 15px; border-radius: 10px; text-align: left; }
+        .desc-text { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 10px; }
+        .highlight { color: #d4af37; font-weight: bold; display: block; margin-bottom: 5px; }
+
+        .hidden { display: none !important; }
+
+        /* --- 6. ⚠️ 弹窗专用样式 (新增) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); /* 半透明黑底 */
+            backdrop-filter: blur(3px);   /* 磨砂玻璃效果 */
+            z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: white;
+            width: 85%; max-width: 320px;
+            padding: 30px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            animation: popIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); /* Q弹动画 */
+        }
+        .modal-icon { font-size: 48px; margin-bottom: 15px; display: block; }
+        .modal-title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .modal-text { font-size: 15px; color: #666; line-height: 1.5; margin-bottom: 25px; }
+        .modal-btn {
+            background: #f5f5f5; color: #333;
+            width: 100%; padding: 12px;
+            border-radius: 8px; border: none;
+            font-size: 16px; font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-btn:active { background: #e0e0e0; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="page-login">
+        <h1>✨ 梦角·适配度测评</h1>
+        <div style="text-align: center; margin: 30px 0;">
+            <span style="font-size: 50px;">🔮</span>
+        </div>
+        <p style="text-align: center; color: #888; font-size: 15px; margin-bottom: 25px;">
+            输入兑换码，开启灵魂探索之旅
+        </p>
+        <input type="text" id="code-input" placeholder="请输入您的兑换码" autocomplete="off">
+        <button class="btn" onclick="verifyCode()">立即开始测评</button>
+        <p style="text-align: center; color: #ccc; font-size: 12px; margin-top: 30px;">
+            适配 iOS / Android / 平板设备
+        </p>
+    </div>
+
+    <div id="page-quiz" class="hidden">
+        <div class="progress">题目 <span id="q-progress">1</span> / 45</div>
+        <h2 id="q-text">题目加载中...</h2>
+        <div id="options-container"></div>
+    </div>
+
+    <div id="page-result" class="hidden">
+        <div id="result-card">
+            <div style="font-size: 12px; color: #d4af37; letter-spacing: 2px; margin-bottom: 10px; opacity: 0.6;">DREAM ANGLE TEST</div>
+            <h2>🔮 测评报告</h2>
+            <div class="score-box"><span id="final-score">0</span><span style="font-size: 20px;">分</span></div>
+            <div class="type-tag" id="result-title">类型加载中</div>
+            
+            <div class="result-content">
+                <div class="desc-text" id="result-desc"></div>
+                <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
+                <div class="desc-text">
+                    <span class="highlight">💡 情感核心体验：</span>
+                    <span id="result-core"></span>
+                </div>
+            </div>
+            <div style="margin-top: 20px; font-size: 12px; color: #999;">长按保存图片 · 分享到小红书</div>
+        </div>
+        <button class="btn" onclick="saveImage()">📸 保存结果图片</button>
+        <button class="btn" style="background: white; color: #999; border: 1px solid #eee; margin-top: 15px; box-shadow: none;" onclick="location.reload()">返回首页</button>
+    </div>
+</div>
+
+<div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-box">
+        <span class="modal-icon" id="modal-icon">⚠️</span>
+        <div class="modal-title" id="modal-title">提示</div>
+        <div class="modal-text" id="modal-msg">内容</div>
+        <button class="modal-btn" onclick="closeModal()">我知道了</button>
+    </div>
+</div>
+
+<script src="data.js"></script>
+
+<script>
+    // 🔴 记得替换！
+    const SUPABASE_URL = 'https://mfyvaxphxabtnjrjucip.supabase.co'; 
+    const SUPABASE_KEY = 'sb_publishable_Yv8fSmqX64lknihxI-uaYA_fSedU6JW';
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentQIndex = 0;
+    let totalScore = 0;
+    let userCode = "";
+
+    // 弹窗控制函数
+    function showModal(title, msg, icon = '⚠️') {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-msg').innerText = msg;
+        document.getElementById('modal-icon').innerText = icon;
+        document.getElementById('modal-overlay').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').classList.add('hidden');
+    }
+
+    async function verifyCode() {
+        const input = document.getElementById('code-input');
+        const codeInput = input.value.trim();
+        const btn = document.querySelector('#page-login .btn');
+        
+        if (!codeInput) { 
+            showModal("请输入兑换码", "兑换码不能为空哦", "📝");
+            return; 
+        }
+        
+        btn.innerText = "正在验证...";
+        btn.disabled = true;
+        
+        try {
+            const { data, error } = await db
+                .from('access_codes')
+                .select('*')
+                .eq('code', codeInput)
+                .single();
+
+            if (error || !data) {
+                // ❌ 弹窗：无效码
+                showModal("验证失败", "找不到这个兑换码\n请检查是否输入正确", "🚫");
+            } else if (data.is_used) {
+                // ❌ 弹窗：已被使用
+                showModal("兑换失败", "哎呀，这个兑换码已经被用过啦\n每个码只能测评一次哦", "🔒");
+            } else {
+                // ✅ 成功
+                userCode = codeInput;
+                startQuiz();
+            }
+        } catch (err) {
+            showModal("网络错误", "连接有点问题，请刷新重试", "📶");
+        } finally {
+            btn.innerText = "立即开始测评";
+            btn.disabled = false;
+        }
+    }
+
+    function startQuiz() {
+        document.getElementById('page-login').classList.add('hidden');
+        document.getElementById('page-quiz').classList.remove('hidden');
+        window.scrollTo(0, 0);
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQIndex];
+        document.getElementById('q-text').innerText = `${currentQIndex + 1}. ${q.text}`;
+        document.getElementById('q-progress').innerText = currentQIndex + 1;
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = ""; 
+
+        q.options.forEach(opt => {
+            const div = document.createElement('div');
+            div.className = 'option';
+            div.innerHTML = opt.text;
+            div.onclick = function() {
+                this.style.background = "#fffdf0";
+                this.style.borderColor = "#d4af37";
+                setTimeout(() => handleAnswer(opt.score), 100);
+            };
+            container.appendChild(div);
+        });
+    }
+
+    function handleAnswer(score) {
+        totalScore += score;
+        if (currentQIndex < questions.length - 1) {
+            currentQIndex++;
+            renderQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    async function showResult() {
+        document.getElementById('page-quiz').classList.add('hidden');
+        document.getElementById('page-result').classList.remove('hidden');
+        window.scrollTo(0, 0);
+
+        const finalScore = Math.round((totalScore / 180) * 100);
+        
+        if (typeof results === 'undefined' || !results) {
+            showModal("数据错误", "请检查 data.js 文件", "🐞");
+            return;
+        }
+
+        const result = results.find(r => finalScore >= r.range[0] && finalScore <= r.range[1]) || results[results.length - 1];
+
+        document.getElementById('final-score').innerText = finalScore;
+        document.getElementById('result-title').innerText = result.title;
+        // 动态设置标签背景色
+        document.querySelector('.type-tag').style.background = result.color;
+        document.querySelector('.score-box').style.color = result.color;
+        
+        document.getElementById('result-desc').innerText = result.desc;
+        document.getElementById('result-core').innerText = result.analysis;
+
+        // 核销
+        if (userCode) {
+            await db.from('access_codes').update({ is_used: true }).eq('code', userCode);
+        }
+    }
+
+    function saveImage() {
+        const element = document.getElementById("result-card");
+        const btn = document.querySelector('#page-result .btn');
+        const originalText = btn.innerText;
+        btn.innerText = "🎨 正在绘制图片...";
+        btn.disabled = true;
+        
+        html2canvas(element, {
+            scale: 2, 
+            useCORS: true,
+            backgroundColor: "#fffcf5"
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `测评结果_${userCode || 'test'}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+            btn.innerText = "✅ 图片已保存";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
