@@ -12,19 +12,18 @@
     
     <style>
         /* ========================================= 
-           响应式视觉系统 (Mobile First + Desktop Adapter)
+           响应式视觉系统
            ========================================= */
         :root {
             --primary: #F04E6E;       
             --primary-grad: linear-gradient(135deg, #F04E6E 0%, #FF6B95 100%);
             --primary-light: #FFF0F5;
-            --bg-page: #FAFAFA;       /* 手机端默认背景 */
-            --bg-desktop: #F0F2F5;    /* 电脑端背景色 */
+            --bg-page: #FAFAFA;       
+            --bg-desktop: #F0F2F5;    
             --card-shadow: 0 8px 24px rgba(240, 78, 110, 0.08);
             --radius-card: 20px;
             --radius-btn: 50px;
             
-            /* 功能色 */
             --purple-bg: #F3E5F5; 
             --purple-text: #8E24AA;
             --green-bg: #E8F5E9; 
@@ -44,68 +43,21 @@
             min-height: 100vh;
         }
 
-        /* --- 核心容器适配 --- */
-        .view { 
-            display: none; 
-            width: 100%; 
-            min-height: 100vh; 
-            animation: fadeIn 0.4s ease; 
-            padding: 20px 15px; /* 手机端保留边距 */
-            margin: 0 auto; 
-        }
+        .view { display: none; width: 100%; min-height: 100vh; animation: fadeIn 0.4s ease; padding: 20px 15px; margin: 0 auto; }
         .view.active { display: block; }
 
-        /* 电脑/平板的大屏幕适配 */
         @media (min-width: 768px) {
-            body {
-                background: var(--bg-desktop); /* 桌面端深色背景衬托卡片 */
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            .view {
-                max-width: 600px; /* 限制卡片最大宽度 */
-                background: #fff; /* 模拟手机的白色背景 */
-                min-height: auto;
-                margin-top: 30px;
-                margin-bottom: 30px;
-                border-radius: 24px;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* 给整个容器加阴影 */
-                padding: 40px; /* 桌面端内边距更大 */
-            }
-            /* 修正底部栏在电脑上的显示 */
-            .bottom-bar {
-                position: sticky !important; /* 不再固定在屏幕底部，而是跟随卡片 */
-                width: 100% !important;
-                border-radius: 0 0 24px 24px;
-                box-shadow: 0 -4px 10px rgba(0,0,0,0.03) !important;
-            }
+            body { background: var(--bg-desktop); display: flex; flex-direction: column; align-items: center; }
+            .view { max-width: 600px; background: #fff; min-height: auto; margin-top: 30px; margin-bottom: 30px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 40px; }
+            .bottom-bar { position: sticky !important; width: 100% !important; border-radius: 0 0 24px 24px; box-shadow: 0 -4px 10px rgba(0,0,0,0.03) !important; }
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- 截图模式专用 (修复灰屏/空白) --- */
-        .snapshot-mode, .snapshot-mode * {
-            animation: none !important;
-            transition: none !important;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-        .snapshot-mode .card {
-            border: 1px solid #eee !important;
-            background: #fff !important;
-        }
+        .snapshot-mode, .snapshot-mode * { animation: none !important; transition: none !important; transform: none !important; box-shadow: none !important; }
+        .snapshot-mode .card { border: 1px solid #eee !important; background: #fff !important; }
 
-        /* --- 组件样式 --- */
-        .card { 
-            background: #FFFFFF; 
-            border-radius: var(--radius-card); 
-            padding: 24px; 
-            margin-bottom: 16px; 
-            box-shadow: var(--card-shadow); 
-            border: 1px solid rgba(0,0,0,0.02); 
-        }
-        
+        .card { background: #FFFFFF; border-radius: var(--radius-card); padding: 24px; margin-bottom: 16px; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); }
         .btn { width: 100%; padding: 16px; border-radius: var(--radius-btn); font-size: 16px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s; }
         .btn:active { transform: scale(0.98); }
         .btn-primary { background: var(--primary-grad); color: white; box-shadow: 0 6px 20px rgba(240, 78, 110, 0.3); }
@@ -114,34 +66,24 @@
         .section-title { font-size: 18px; font-weight: 800; margin: 35px 0 15px; display: flex; align-items: center; }
         .section-title::before { content: ''; display: inline-block; width: 6px; height: 18px; background: var(--primary); border-radius: 4px; margin-right: 10px; }
 
-        /* --- 首页适配 --- */
         .landing-hero { text-align: center; padding: 40px 0 20px; }
         .hero-title { font-size: 32px; font-weight: 900; color: var(--primary); line-height: 1.2; margin-bottom: 10px; }
-        
-        /* 功能网格：手机2列，电脑4列 */
         .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 30px 0; }
-        @media (max-width: 400px) {
-            .feature-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        @media (max-width: 400px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
         .feature-item { text-align: center; background: white; padding: 15px 5px; border-radius: 16px; box-shadow: var(--card-shadow); }
         .feature-icon { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
         .feature-text { font-size: 12px; font-weight: bold; color: #555; }
 
-        /* --- 模式选择 --- */
         .mode-card { display: flex; align-items: center; padding: 20px; border: 2px solid transparent; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; }
-        .mode-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); } /* 电脑悬停效果 */
+        .mode-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .mode-card.selected { border-color: var(--primary); background: var(--primary-light); }
         .mode-icon { width: 50px; height: 50px; border-radius: 50%; background: #FCE4EC; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-right: 15px; flex-shrink: 0; }
         .mode-tag { position: absolute; top: 0; right: 0; background: var(--primary); color: white; font-size: 10px; padding: 4px 10px; border-bottom-left-radius: 10px; }
 
-        /* --- 表单样式 --- */
         .form-group { margin-bottom: 25px; }
         .form-label { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: block; }
         .radio-group { display: flex; flex-direction: column; gap: 10px; }
-        /* 电脑端表单两列排布 */
-        @media (min-width: 768px) {
-            .radio-group { display: grid; grid-template-columns: 1fr 1fr; }
-        }
+        @media (min-width: 768px) { .radio-group { display: grid; grid-template-columns: 1fr 1fr; } }
         .custom-radio { display: flex; align-items: center; padding: 15px; border: 1px solid #eee; border-radius: 12px; cursor: pointer; background: white; transition: all 0.2s; }
         .custom-radio:hover { border-color: #ddd; background: #fafafa; }
         .custom-radio.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; }
@@ -150,73 +92,57 @@
         .radio-dot { width: 10px; height: 10px; background: var(--primary); border-radius: 50%; display: none; }
         .custom-radio.active .radio-dot { display: block; }
         .custom-select { width: 100%; padding: 15px; border: 1px solid #eee; border-radius: 12px; font-size: 16px; background: white; outline: none; }
+        
+        /* 样式：输入框 */
+        .custom-input { width: 100%; padding: 15px; border: 1px solid #eee; border-radius: 12px; font-size: 16px; background: white; outline: none; transition: border 0.2s; }
+        .custom-input:focus { border-color: var(--primary); }
 
-        /* --- 答题页 --- */
         .quiz-header { position: sticky; top: 0; background: inherit; padding-bottom: 10px; z-index: 10; }
         .progress-track { height: 6px; background: #E0E0E0; border-radius: 3px; overflow: hidden; margin-top: 5px; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
         .dim-badge-card { background: white; padding: 15px; border-radius: 12px; margin: 15px 0; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
         .dim-name { font-weight: 700; color: #333; }
         .dim-progress { background: var(--primary-light); color: var(--primary); font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
-        
         .question-text { font-size: 18px; font-weight: 700; color: #222; margin: 20px 0 30px; line-height: 1.5; }
-        
         .option-item { display: flex; align-items: center; padding: 18px; background: white; border: 1px solid #eee; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
         .option-item:hover { background: #fafafa; }
         .option-item.selected { border-color: var(--primary); background: var(--primary-light); }
         .option-circle { width: 22px; height: 22px; border: 2px solid #ccc; border-radius: 50%; margin-right: 15px; flex-shrink: 0; }
         .option-item.selected .option-circle { border-color: var(--primary); border-width: 6px; }
-        
         .quiz-nav { display: flex; gap: 10px; margin-top: 30px; }
 
-        /* --- 答题卡网格适配 --- */
         .answer-grid-container { margin-top: 30px; padding: 20px 0; border-top: 1px dashed #eee; }
         .grid-title { font-size: 12px; color: #999; text-align: center; margin-bottom: 15px; }
-        /* 手机6列，电脑9列 */
         .answer-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-        @media (min-width: 768px) {
-            .answer-grid { grid-template-columns: repeat(9, 1fr); }
-        }
+        @media (min-width: 768px) { .answer-grid { grid-template-columns: repeat(9, 1fr); } }
         .grid-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #eee; border-radius: 8px; font-size: 12px; color: #333; transition: all 0.3s; cursor: default; }
         .grid-cell.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; transform: scale(1.1); box-shadow: 0 4px 10px rgba(240,78,110,0.3); }
         .grid-cell.done { background: #f9f9f9; color: #bbb; border-color: #f0f0f0; }
 
-        /* --- 结果页 --- */
         .score-card { text-align: center; background: linear-gradient(180deg, #FFFFFF 0%, #FFF5F7 100%); padding-top: 40px; border: 1px solid #FFE4E1; }
         .score-val { font-size: 72px; font-weight: 900; color: var(--primary); line-height: 1; margin: 10px 0; }
         .score-badge { display: inline-block; background: var(--primary); color: white; padding: 6px 20px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 25px; }
         
         .list-box { display: flex; gap: 12px; margin-bottom: 15px; align-items: flex-start; }
         .list-icon-bg { width: 32px; height: 32px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); flex-shrink: 0; }
-        
         .capsule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .capsule { background: #F9F9F9; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px; }
         .capsule-bar { height: 6px; background: #eee; border-radius: 3px; width: 100%; margin-top: 8px; overflow: hidden; }
-        
         .flow-step { background: #FAFAFA; padding: 15px; border-radius: 12px; display: flex; gap: 15px; margin-bottom: 10px; border: 1px solid #eee; }
         .flow-num { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex-shrink: 0; }
         .flow-arrow { text-align: center; color: #ccc; margin: 5px 0 15px; }
-        
         .timeline-item { position: relative; padding-left: 30px; margin-bottom: 30px; }
         .timeline-item::before { content: ''; position: absolute; left: 9px; top: 0; bottom: -30px; width: 2px; background: #FFE4E1; }
         .timeline-item:last-child::before { display: none; }
         .timeline-dot { position: absolute; left: 0; top: 0; width: 20px; height: 20px; background: #FFCDD2; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .timeline-dot-inner { width: 10px; height: 10px; background: var(--primary); border-radius: 50%; }
 
-        /* 底部栏适配 */
         .bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 12px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); display: flex; gap: 10px; z-index: 100; }
-
-        /* 弹窗适配 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-content { width: 85%; background: white; border-radius: 24px; overflow: hidden; max-height: 90vh; overflow-y: auto; }
-        /* 电脑端弹窗最大宽度 */
-        @media (min-width: 768px) {
-            .modal-content { max-width: 400px; }
-        }
-        
+        @media (min-width: 768px) { .modal-content { max-width: 400px; } }
         .alert-box { padding: 30px; text-align: center; }
         .alert-icon { font-size: 40px; color: #FF5252; margin-bottom: 15px; }
-
         #poster-container { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         #poster-img { width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .poster-tip { margin-top: 15px; color: #666; font-size: 14px; display: flex; align-items: center; gap: 8px; }
@@ -243,28 +169,16 @@
         </div>
 
         <div class="feature-grid">
-            <div class="feature-item">
-                <div class="feature-icon"><i class="fas fa-clock"></i></div>
-                <div class="feature-text">10-15<br>分钟完成</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
-                <div class="feature-text">5大<br>核心维度</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon"><i class="fas fa-lock"></i></div>
-                <div class="feature-text">100%<br>隐私保护</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon"><i class="fas fa-user-friends"></i></div>
-                <div class="feature-text">双视角<br>深度分析</div>
-            </div>
+            <div class="feature-item"><div class="feature-icon"><i class="fas fa-clock"></i></div><div class="feature-text">10-15<br>分钟完成</div></div>
+            <div class="feature-item"><div class="feature-icon"><i class="fas fa-check-circle"></i></div><div class="feature-text">5大<br>核心维度</div></div>
+            <div class="feature-item"><div class="feature-icon"><i class="fas fa-lock"></i></div><div class="feature-text">100%<br>隐私保护</div></div>
+            <div class="feature-item"><div class="feature-icon"><i class="fas fa-user-friends"></i></div><div class="feature-text">双视角<br>深度分析</div></div>
         </div>
     </div>
 
     <div id="view-mode" class="view">
         <h2 style="text-align: center; margin: 30px 0 10px;">选择测评视角</h2>
-        <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 40px;">提供两种测评视角，您可以评估自己或帮助了解恋人</p>
+        <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 40px;">目前仅支持个人自测模式</p>
 
         <div class="card mode-card" onclick="selectMode('self')">
             <div class="mode-tag">✨ 推荐</div>
@@ -275,18 +189,6 @@
                 <div style="display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap;">
                     <span style="font-size: 10px; color: var(--green-text); background: var(--green-bg); padding: 2px 6px; border-radius: 4px;"><i class="fas fa-check"></i> 情感共振量表</span>
                     <span style="font-size: 10px; color: var(--green-text); background: var(--green-bg); padding: 2px 6px; border-radius: 4px;"><i class="fas fa-check"></i> 沟通深度量表</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mode-card" onclick="selectMode('partner')">
-            <div class="mode-icon" style="color: #E91E63; background: #FCE4EC;"><i class="fas fa-heart"></i></div>
-            <div>
-                <h3 style="font-size: 18px; margin-bottom: 5px;">为恋人测</h3>
-                <p style="font-size: 12px; color: #888;">评估TA在关系中的契合程度</p>
-                <div style="display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap;">
-                    <span style="font-size: 10px; color: var(--green-text); background: var(--green-bg); padding: 2px 6px; border-radius: 4px;"><i class="fas fa-check"></i> 冲突处理量表</span>
-                    <span style="font-size: 10px; color: var(--green-text); background: var(--green-bg); padding: 2px 6px; border-radius: 4px;"><i class="fas fa-check"></i> 亲密契合量表</span>
                 </div>
             </div>
         </div>
@@ -303,20 +205,17 @@
                 <h4 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i class="fas fa-lock" style="color: var(--primary);"></i> 隐私保护</h4>
                 <p style="font-size: 13px; color: #555; text-align: justify;">您的所有答案将<strong>完全匿名</strong>，仅在您的设备本地存储，<strong>不会上传到任何服务器</strong>。您拥有完全的数据控制权。</p>
             </div>
-            
             <div style="background: var(--warn-bg); padding: 15px; border-radius: 12px; display: flex; gap: 10px;">
                 <i class="fas fa-exclamation-triangle" style="color: var(--warn-text); font-size: 20px;"></i>
                 <p style="font-size: 12px; color: #BF360C;"><strong>重要提醒：</strong>如果目前正在经历严重的关系暴力或极端控制，请立即寻求专业帮助。本评估不适合危机状态。</p>
             </div>
         </div>
-        
         <div class="card" style="display: flex; align-items: center; gap: 15px; border: 2px solid var(--primary-light);">
             <div onclick="toggleAgree()" id="agree-radio" style="width: 24px; height: 24px; border: 2px solid #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
                 <div id="agree-dot" style="width: 12px; height: 12px; background: var(--primary); border-radius: 50%; display: none;"></div>
             </div>
             <div style="font-size: 13px; color: #333;">我已仔细阅读并理解上述内容，自愿参与本次评估。</div>
         </div>
-
         <div style="display: flex; gap: 15px;">
             <button class="btn btn-outline" onclick="location.reload()">我不同意</button>
             <button class="btn btn-primary" onclick="confirmConsent()">我同意并开始</button>
@@ -357,12 +256,8 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">💑 你们目前的恋爱状态</label>
-                <div class="radio-group" id="status-group">
-                    <div class="custom-radio" onclick="selectRadio('status', 'hot', this)"><div class="radio-circle"><div class="radio-dot"></div></div>热恋期</div>
-                    <div class="custom-radio" onclick="selectRadio('status', 'flat', this)"><div class="radio-circle"><div class="radio-dot"></div></div>平淡期/磨合期</div>
-                    <div class="custom-radio" onclick="selectRadio('status', 'cold', this)"><div class="radio-circle"><div class="radio-dot"></div></div>冷战/冲突期</div>
-                </div>
+                <label class="form-label">📝 Ta的名字/昵称</label>
+                <input type="text" id="partner-name-input" class="custom-input" placeholder="请输入Ta的名字（用于生成报告）">
             </div>
             
             <button class="btn btn-primary" onclick="submitInfo()">下一步，开始答题</button>
@@ -371,28 +266,19 @@
 
     <div id="view-quiz" class="view">
         <div class="quiz-header">
-            <div class="progress-meta">
-                <span>进度</span>
-                <span><span id="current-q">1</span> / 45</span>
-            </div>
+            <div class="progress-meta"><span>进度</span><span><span id="current-q">1</span> / 45</span></div>
             <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
         </div>
-
         <div class="dim-badge-card">
             <div class="dim-name" id="dim-name-display">加载中...</div>
             <div class="dim-progress" id="dim-progress-display">第 1/9 题</div>
         </div>
-
         <div class="question-text" id="q-text">题目加载中...</div>
-
-        <div id="options-box">
-            </div>
-
+        <div id="options-box"></div>
         <div class="quiz-nav">
             <button class="btn btn-outline" onclick="prevQuestion()" id="btn-prev" style="width: 30%;">上一题</button>
             <button class="btn btn-primary" onclick="nextQuestion()" id="btn-next" style="width: 70%;" disabled>请选择选项</button>
         </div>
-
         <div class="answer-grid-container">
             <div class="grid-title">答题进度概览</div>
             <div class="answer-grid" id="answer-grid-box"></div>
@@ -401,33 +287,29 @@
 
     <div id="view-result" class="view">
         <div class="card score-card">
+            <div id="res-names" style="font-size: 20px; font-weight: 800; color: #333; margin-bottom: 5px;"></div>
+            
             <div style="font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px;">梦角·契合度指数 (RPI)</div>
             <div class="score-val" id="res-score">0</div>
             <div class="score-badge" id="res-level">计算中...</div>
-            
             <div style="font-size: 13px; color: #555; padding: 0 10px; line-height: 1.6; margin-top: 10px;" id="res-summary">...</div>
-
             <div style="height: 8px; background: linear-gradient(90deg, #FFCDD2, #F04E6E, #B71C1C); border-radius: 4px; position: relative; margin: 30px 10px 10px;">
                 <div id="res-slider" style="width: 20px; height: 20px; background: white; border: 4px solid var(--primary); border-radius: 50%; position: absolute; top: 50%; left: 0%; transform: translate(-50%, -50%); box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: left 1s;"></div>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #999;">
-                <span>疏离(0)</span><span>磨合(50)</span><span>双生(100)</span>
-            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #999;"><span>疏离(0)</span><span>磨合(50)</span><span>双生(100)</span></div>
         </div>
 
         <div class="section-title">💡 给您的建议</div>
         <div class="card" id="box-suggestions"></div>
 
         <div class="section-title">📊 五维度分析</div>
-        <div class="card">
-            <div class="capsule-grid" id="box-dimensions"></div>
-        </div>
+        <div class="card"><div class="capsule-grid" id="box-dimensions"></div></div>
 
         <div class="section-title">📉 可视化分析</div>
         <div class="card">
             <h4 style="text-align: center; margin-bottom: 15px;">契合度雷达图</h4>
             <canvas id="radarChart"></canvas>
-            <p style="text-align: center; font-size: 12px; color: #999; margin-top: 15px;">T分数范围: 20-80，50为平均水平</p>
+            <p style="text-align: center; font-size: 12px; color: #999; margin-top: 15px;">T分数范围: 20-80</p>
         </div>
 
         <div class="section-title">✨ 契合人格类型</div>
@@ -446,9 +328,7 @@
         <div class="card" id="box-security"></div>
 
         <div class="section-title" style="color: var(--purple-text);">🔮 星座性格参考 <span style="font-size: 10px; background: #eee; padding: 2px 5px; border-radius: 4px; margin-left: 5px; color: #666;">仅供娱乐</span></div>
-        <div class="card" style="background: var(--purple-bg); border: 1px solid #E1BEE7;" id="box-zodiac">
-            <p style="text-align:center; color: #8E24AA;">请在基本信息中选择星座以查看此模块</p>
-        </div>
+        <div class="card" style="background: var(--purple-bg); border: 1px solid #E1BEE7;" id="box-zodiac"></div>
 
         <div class="section-title">❤️ 关系健康度评估</div>
         <div class="card" style="background: #F1F8E9;">
@@ -474,15 +354,9 @@
         <div class="section-title">📚 推荐学习资源</div>
         <div class="card">
             <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;">
-                <div style="min-width: 120px; background: #F5F5F5; padding: 10px; border-radius: 8px; font-size: 12px;">
-                    <i class="fas fa-book" style="color: var(--primary);"></i> <strong>非暴力沟通</strong><br><span style="color:#999">马歇尔·卢森堡</span>
-                </div>
-                <div style="min-width: 120px; background: #F5F5F5; padding: 10px; border-radius: 8px; font-size: 12px;">
-                    <i class="fas fa-book" style="color: var(--primary);"></i> <strong>亲密关系</strong><br><span style="color:#999">罗兰·米勒</span>
-                </div>
-                <div style="min-width: 120px; background: #F5F5F5; padding: 10px; border-radius: 8px; font-size: 12px;">
-                    <i class="fas fa-book" style="color: var(--primary);"></i> <strong>爱的五种语言</strong><br><span style="color:#999">盖瑞·查普曼</span>
-                </div>
+                <div style="min-width: 120px; background: #F5F5F5; padding: 10px; border-radius: 8px; font-size: 12px;"><i class="fas fa-book" style="color: var(--primary);"></i> <strong>非暴力沟通</strong><br><span style="color:#999">马歇尔·卢森堡</span></div>
+                <div style="min-width: 120px; background: #F5F5F5; padding: 10px; border-radius: 8px; font-size: 12px;"><i class="fas fa-book" style="color: var(--primary);"></i> <strong>亲密关系</strong><br><span style="color:#999">罗兰·米勒</span></div>
+                <div style="min-width: 120px; background: #F5F5F5; padding: 10px; border-radius: 8px; font-size: 12px;"><i class="fas fa-book" style="color: var(--primary);"></i> <strong>爱的五种语言</strong><br><span style="color:#999">盖瑞·查普曼</span></div>
             </div>
         </div>
 
@@ -491,16 +365,6 @@
             <span id="finish-time">...</span>
         </div>
 
-        <div class="card" style="background: #FFFDE7; border: 1px solid #FFF59D; margin-top: 15px;">
-            <div style="display: flex; gap: 10px;">
-                <i class="fas fa-info-circle" style="color: #FBC02D; margin-top: 2px;"></i>
-                <div>
-                    <h4 style="font-size: 13px; color: #F57F17;">重要声明</h4>
-                    <p style="font-size: 11px; color: #F9A825; line-height: 1.4;">本测评结果仅供娱乐参考，不构成专业心理咨询诊断。RPI指数是一个有趣的探索工具，帮助你了解关系特点。轻松看待结果，开心就好！</p>
-                </div>
-            </div>
-        </div>
-        
         <div style="height: 80px;"></div>
 
         <div class="bottom-bar">
@@ -512,17 +376,11 @@
     <div class="modal" id="share-modal" onclick="if(event.target.id==='share-modal') closeModal('share-modal')">
         <div class="modal-content">
             <div id="poster-container">
-                <div id="poster-loading" style="padding: 20px; color: #666;">
-                    <i class="fas fa-spinner fa-spin"></i> 正在生成图片...
-                </div>
+                <div id="poster-loading" style="padding: 20px; color: #666;"><i class="fas fa-spinner fa-spin"></i> 正在生成图片...</div>
                 <img id="poster-img" src="" alt="结果海报" style="display:none;">
-                <div class="poster-tip" id="poster-tip" style="display:none;">
-                    <i class="fas fa-fingerprint"></i> 长按上方图片保存到相册
-                </div>
+                <div class="poster-tip" id="poster-tip" style="display:none;"><i class="fas fa-fingerprint"></i> 长按上方图片保存到相册</div>
             </div>
-            <div style="padding: 10px 20px 20px;">
-                <button class="btn btn-outline" onclick="closeModal('share-modal')" style="font-size: 14px; padding: 10px;">关闭</button>
-            </div>
+            <div style="padding: 10px 20px 20px;"><button class="btn btn-outline" onclick="closeModal('share-modal')" style="font-size: 14px; padding: 10px;">关闭</button></div>
         </div>
     </div>
 
